@@ -22,16 +22,6 @@ var client_id = '1ce132c081784f7481f16be1e820852e';
 var client_secret = '018e60ef3a9f4e7fa9d1d81f8aece85d';
 var redirect_uri = 'http://localhost:5000/api/callback/';
 
-var generateRandomString = function(length) {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    
-    for (var i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-};
-
 var stateKey = 'spotify_auth_state';
 var spotifyApi = new SpotifyWebApi({
     clientId: client_id,
@@ -40,7 +30,7 @@ var spotifyApi = new SpotifyWebApi({
 });
 
 app.get('/api/login', (req, res) => {
-    let state = generateRandomString(16);
+    let state = uuidv1();
     res.cookie(stateKey, state);
 
     let scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming';
@@ -50,7 +40,7 @@ app.get('/api/login', (req, res) => {
             client_id: client_id,
             scope: scope,
             redirect_uri: redirect_uri,
-            state: state
+            state
         }));
 });
 
