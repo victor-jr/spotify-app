@@ -84,7 +84,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{height: '100%'}}>
         <header className="App-header">
           <Script
             url="https://sdk.scdn.co/spotify-player.js"
@@ -93,13 +93,9 @@ class App extends React.Component {
             onLoad={this.handleScriptLoad.bind(this)}
           />
         </header>
-        <Grid textAlign='center' columns={1}>
-          <Grid.Row></Grid.Row>
-          <Grid.Row>
-            <h4>Logged In</h4>
-          </Grid.Row>
+        <div style={{height: '100%'}}>
           <Session />
-        </Grid>
+        </div>        
       </div>
     )
   }

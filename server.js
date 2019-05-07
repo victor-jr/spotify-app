@@ -131,19 +131,19 @@ app.get('/api/session/start', (req, res) => {
                             headers: auth_header,
                             json: true
                         })
-                        .then((result) => {
-                            rp.put({
-                                url: 'https://api.spotify.com/v1/me/player/play',
-                                headers: auth_header,
-                                body: {
-                                    uris: [result.tracks[0].uri]
-                                },
-                                json: true
-                            })
-                            .then(() => {
+                        // .then((result) => {
+                        //     rp.put({
+                        //         url: 'https://api.spotify.com/v1/me/player/play',
+                        //         headers: auth_header,
+                        //         body: {
+                        //             uris: [result.tracks[0].uri]
+                        //         },
+                        //         json: true
+                        //     })
+                            .then((result) => {
                                 res.send({tracks: result.tracks, sessionKey: listeningSession.guid});
                             })
-                        })
+                        // })
                     })
                 }
             });
@@ -152,6 +152,17 @@ app.get('/api/session/start', (req, res) => {
     .catch(err => {
         console.log(err);
         res.send(err);
+    })
+})
+
+app.get('/api/song/search', (req, res) => {
+    rp.get({
+        url: 'https://api.spotify.com/v1/search?' + querystring({ q: req.query.song }),
+        headers: auth_header,
+        json: true
+    })
+    .then(results => {
+        res.send(results);
     })
 })
 
