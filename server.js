@@ -157,12 +157,15 @@ app.get('/api/session/start', (req, res) => {
 
 app.get('/api/song/search', (req, res) => {
     rp.get({
-        url: 'https://api.spotify.com/v1/search?' + querystring({ q: req.query.song }),
-        headers: auth_header,
+        url: 'https://api.spotify.com/v1/search?' + querystring.stringify({ q: req.query.song, type: 'track' }),
+        headers: { 'Authorization': 'Bearer ' + req.cookies.access_token },
         json: true
     })
     .then(results => {
-        res.send(results);
+        res.send(results.tracks.items);
+    })
+    .catch(err => {
+        res.send(err);
     })
 })
 

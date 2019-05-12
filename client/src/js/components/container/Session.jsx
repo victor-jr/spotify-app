@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import { Grid, Button, Sidebar, Segment, Input, List } from 'semantic-ui-react';
+import { Grid, Button, Sidebar, Container } from 'semantic-ui-react';
 import Track from '../presentational/Track.jsx';
+import SearchSideBar from './SearchSideBar.jsx';
 
 export default class Session extends React.Component {
     constructor(props) {
@@ -38,70 +39,40 @@ export default class Session extends React.Component {
     }
 
     render() {
-        let { sideBarVisible } = this.state;
         return (
             <Sidebar.Pushable>
-                <Sidebar as={Segment} animation='overlay' icon='labeled' vertical visible={sideBarVisible} width='wide'>
-                    <Grid centered style={{margin: '0'}}>
-                        <Grid.Row columns={1}>
-                            <Input placeholder='Search...' />
-                        </Grid.Row>
-                        <Grid.Row>
-                            <List divided style={{width: '90%'}}>
-                                <List.Item>
-                                <List.Icon name='spotify' size='large' verticalAlign='middle' />
-                                <List.Content>
-                                    <List.Header as='a'>Semantic-Org/Semantic-UI</List.Header>
-                                    <List.Description as='a'>Updated 10 mins ago</List.Description>
-                                </List.Content>
-                                </List.Item>
-                                <List.Item>
-                                <List.Icon name='spotify' size='large' verticalAlign='middle' />
-                                <List.Content>
-                                    <List.Header as='a'>Semantic-Org/Semantic-UI-Docs</List.Header>
-                                    <List.Description as='a'>Updated 22 mins ago</List.Description>
-                                </List.Content>
-                                </List.Item>
-                                <List.Item>
-                                <List.Icon name='spotify' size='large' verticalAlign='middle' />
-                                <List.Content>
-                                    <List.Header as='a'>Semantic-Org/Semantic-UI-Meteor</List.Header>
-                                    <List.Description as='a'>Updated 34 mins ago</List.Description>
-                                </List.Content>
-                                </List.Item>
-                            </List>
-                        </Grid.Row>
-                    </Grid>
-                </Sidebar>
-
+                <SearchSideBar sideBarVisible={this.state.sideBarVisible}/>
+                
                 <Sidebar.Pusher>
-                    <Grid textAlign='center' columns={1}>
-                        <Grid.Row></Grid.Row>
-                        <Grid.Row>
-                            <h4>Logged In</h4>
-                        </Grid.Row>
-                        <Grid.Row centered columns={1}>
-                        {
-                            this.state.sessionKey == null ?
-                            <Button onClick={this.handleStartSession}>Start Session</Button> :
-                            <Button icon='search' onClick={this.handleToggleSearch} />
-                        }
-                        </Grid.Row>
-                        {
-                            this.state.sessionKey != null &&
+                    <Container>
+                        <Grid textAlign='center' columns={1}>
+                            <Grid.Row></Grid.Row>
                             <Grid.Row>
-                                <h3>{`You Session Key: ${this.state.sessionKey}`}</h3>
+                                <h4>Logged In</h4>
                             </Grid.Row>
-                        }
-                        <Grid.Row centered columns={3}>
+                            <Grid.Row centered columns={1}>
                             {
-                                this.state.tracks != null &&
-                                this.state.tracks.map((track, i) => {
-                                    return (<Track key={i} track={track} onClickHandler={this.handleOnclickTrack} playing={false} />)
-                                })
+                                this.state.sessionKey == null ?
+                                <Button onClick={this.handleStartSession}>Start Session</Button> :
+                                <Button icon='search' onClick={this.handleToggleSearch} />
                             }
-                        </Grid.Row>
-                    </Grid>
+                            </Grid.Row>
+                            {
+                                this.state.sessionKey != null &&
+                                <Grid.Row>
+                                    <h3>{`You Session Key: ${this.state.sessionKey}`}</h3>
+                                </Grid.Row>
+                            }
+                            <Grid.Row centered columns={3}>
+                                {
+                                    this.state.tracks != null &&
+                                    this.state.tracks.map((track, i) => {
+                                        return (<Track key={i} track={track} playing={false} />)
+                                    })
+                                }
+                            </Grid.Row>
+                        </Grid>
+                    </Container>
                 </Sidebar.Pusher>
             </Sidebar.Pushable>
         )
