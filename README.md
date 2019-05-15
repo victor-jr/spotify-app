@@ -20,7 +20,8 @@ npm run dev
 
 ## Usage
 
-You will need a Spotify Premium Account or else the system will not work properly
+You will need a Spotify Premium Account or else the system will not work properly.
+
 Spotify API Reference for spotify resource endpoints: https://developer.spotify.com/documentation/web-api/reference-beta/
 
 ## Contributing
