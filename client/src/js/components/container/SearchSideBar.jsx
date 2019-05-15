@@ -12,6 +12,7 @@ export default class SearchSideBar extends React.Component {
         };
         this.search = this.search.bind(this);
         this.handleSearchValChange = this.handleSearchValChange.bind(this);
+        this.handleSongClick = this.handleSongClick.bind(this);
     }
 
     search = () => {
@@ -33,11 +34,24 @@ export default class SearchSideBar extends React.Component {
         })
     }
 
+    handleSongClick = (song) => {
+        axios.post('http://localhost:5000/api/session/addsong', 
+            { id: song.id },
+            {
+                withCredentials: true
+            }    
+        )
+        .then(res => {
+            //call parent to update songs on screen
+            this.props.handleAddTrack();
+        })
+    }
+
     render() {
         let { sideBarVisible } = this.props;
         let { songs, searchVal } = this.state;
         return (
-            <Sidebar as={Segment} animation='overlay' icon='labeled' vertical visible={sideBarVisible} width='wide'>
+            <Sidebar as={Segment} animation='overlay' icon='labeled' inverted vertical visible={sideBarVisible} width='wide'>
                 <Grid centered style={{margin: '0'}}>
                     <Grid.Row columns={1}>
                         <Input placeholder='Search...' onChange={this.handleSearchValChange} value={searchVal} />
@@ -48,11 +62,11 @@ export default class SearchSideBar extends React.Component {
                         {
                             songs.map(song => {
                                 return (
-                                <List.Item>
+                                <List.Item key={song.id}>
                                     <List.Icon name='spotify' size='large' verticalAlign='middle' />
                                     <List.Content>
-                                        <List.Header as='a'>{song.name}</List.Header>
-                                        <List.Description as='a'>{song.artists[0].name}</List.Description>
+                                        <List.Header onClick={() => this.handleSongClick(song)}  as='a'>{song.name}</List.Header>
+                                        <List.Description style={{color:'#00b5ad'}} as='p'>{song.artists[0].name}</List.Description>
                                     </List.Content>
                                 </List.Item>
                                 )
@@ -67,5 +81,6 @@ export default class SearchSideBar extends React.Component {
 }
 
 Input.propTypes = {
-    sideBarVisible: PropTypes.bool
+    sideBarVisible: PropTypes.bool,
+    handleAddTrack: PropTypes.func
 };

@@ -14,15 +14,14 @@ export default class Session extends React.Component {
         }
         this.handleStartSession = this.handleStartSession.bind(this);
         this.handleToggleSearch = this.handleToggleSearch.bind(this);
+        this.handleGetUpdatedTracks = this.handleGetUpdatedTracks.bind(this);
+        this.setOpacity = this.setOpacity.bind(this);
     }
 
     handleStartSession = () => {
         axios.get('http://localhost:5000/api/session/start', { withCredentials: true })
             .then(res => {
-                res.data.tracks.forEach(track => {
-                    track.opacity = '.15';
-                });
-                res.data.tracks[0].opacity = 1;
+                this.setOpacity(res);
                 this.setState({
                     tracks: res.data.tracks,
                     sessionKey: res.data.sessionKey
@@ -38,10 +37,30 @@ export default class Session extends React.Component {
         this.setState({ sideBarVisible });
     }
 
+    handleGetUpdatedTracks = () => {
+        axios.get('http://localhost:5000/api/session/getTracks', { withCredentials: true })
+        .then(res => {
+            this.setOpacity(res);
+            this.setState({
+                tracks: res.data.tracks
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+    setOpacity = (res) => {
+        res.data.tracks.forEach(track => {
+            track.opacity = '.3';
+        });
+        res.data.tracks[0].opacity = 1;
+    }
+
     render() {
         return (
             <Sidebar.Pushable>
-                <SearchSideBar sideBarVisible={this.state.sideBarVisible}/>
+                <SearchSideBar sideBarVisible={this.state.sideBarVisible} handleAddTrack={this.handleGetUpdatedTracks}/>
                 
                 <Sidebar.Pusher>
                     <Container>
