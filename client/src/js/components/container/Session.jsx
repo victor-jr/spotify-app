@@ -15,13 +15,15 @@ export default class Session extends React.Component {
         this.handleStartSession = this.handleStartSession.bind(this);
         this.handleToggleSearch = this.handleToggleSearch.bind(this);
         this.handleGetUpdatedTracks = this.handleGetUpdatedTracks.bind(this);
-        this.setOpacity = this.setOpacity.bind(this);
     }
 
     handleStartSession = () => {
         axios.get('http://localhost:5000/api/session/start', { withCredentials: true })
             .then(res => {
-                this.setOpacity(res);
+                res.data.tracks.forEach(track => {
+                    track.opacity = '.3';
+                });
+                res.data.tracks[0].opacity = 1;
                 this.setState({
                     tracks: res.data.tracks,
                     sessionKey: res.data.sessionKey
@@ -38,23 +40,18 @@ export default class Session extends React.Component {
     }
 
     handleGetUpdatedTracks = () => {
-        axios.get('http://localhost:5000/api/session/getTracks', { withCredentials: true })
+        axios.get('http://localhost:5000/api/session/getLatestTrack', { withCredentials: true })
         .then(res => {
-            this.setOpacity(res);
+            let tracks = this.state.tracks;
+            res.data.track.opacity = '.3';
+            tracks.push(res.data.track);
             this.setState({
-                tracks: res.data.tracks
+                tracks
             })
         })
         .catch(err => {
             console.log(err);
         })
-    }
-
-    setOpacity = (res) => {
-        res.data.tracks.forEach(track => {
-            track.opacity = '.3';
-        });
-        res.data.tracks[0].opacity = 1;
     }
 
     render() {

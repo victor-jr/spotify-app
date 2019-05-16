@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var rp = require('request-promise');
 var querystring = require('querystring');
 var uuidv1 = require('uuid/v1');
-var SpotifyWebApi = require('spotify-web-api-node');
 
 var app = express();
 app.use(cors({ origin: 'http://localhost:8080', credentials: true }));
@@ -172,7 +171,7 @@ app.get('/api/session/start', (req, res) => {
     });
 })
 
-app.get('/api/session/getTracks', (req, res) => {
+app.get('/api/session/getLatestTrack', (req, res) => {
     listeningSessions.findOne({_id: req.cookies['listening_session']}, (err, doc) => {
         if (err) {
             res.send(err);
@@ -180,15 +179,15 @@ app.get('/api/session/getTracks', (req, res) => {
         if (doc == null) {
             res.sendStatus(404);
         } else {
-            //get all tracks for user including one that was added
-            //might need to find a better way to just find the new added song and return
+            //get last track to fetch
+            let latestTrack = doc.tracks[doc.tracks.length-1];
             rp.get({
-                url: `https://api.spotify.com/v1/tracks/?ids=${doc.tracks.join(',')}`,
+                url: `https://api.spotify.com/v1/tracks/${latestTrack}`,
                 headers: { 'Authorization': 'Bearer ' + req.cookies.access_token },
                 json: true
             })
-            .then((result) => {
-                res.send({tracks: result.tracks});
+            .then((track) => {
+                res.send({track: track});
             })
             .catch(err => {
                 res.send(err);
