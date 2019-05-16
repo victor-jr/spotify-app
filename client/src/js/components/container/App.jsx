@@ -11,7 +11,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       device_id: null,
-      scriptLoaded: false
+      scriptLoaded: false,
+      playerLoaded: false
     };
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
     this.handleLoadFailure = this.handleLoadSuccess.bind(this);
@@ -50,6 +51,7 @@ class App extends React.Component {
     // Ready
     player.addListener('ready', ({ device_id }) => {
       console.log('Ready with Device ID', device_id);
+      this.setState({ playerLoaded: true });
     });
 
     // Not Ready
@@ -94,7 +96,7 @@ class App extends React.Component {
           />
         </header>
         <div style={{height: '100%'}}>
-          <Session />
+          <Session playerLoaded={this.state.playerLoaded}/>
         </div>        
       </div>
     )

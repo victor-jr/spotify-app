@@ -80,7 +80,7 @@ export default class SearchSideBar extends React.Component {
     }
 }
 
-Input.propTypes = {
+SearchSideBar.propTypes = {
     sideBarVisible: PropTypes.bool,
     handleAddTrack: PropTypes.func
 };

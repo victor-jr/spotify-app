@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Grid, Button, Sidebar, Container } from 'semantic-ui-react';
 import Track from '../presentational/Track.jsx';
 import SearchSideBar from './SearchSideBar.jsx';
+import { PropTypes } from 'prop-types';
 
 export default class Session extends React.Component {
     constructor(props) {
@@ -55,6 +56,8 @@ export default class Session extends React.Component {
     }
 
     render() {
+        let { playerLoaded } = this.props;
+        let btnText = playerLoaded ? 'Start Session' : 'Loading Player...';
         return (
             <Sidebar.Pushable>
                 <SearchSideBar sideBarVisible={this.state.sideBarVisible} handleAddTrack={this.handleGetUpdatedTracks}/>
@@ -69,7 +72,7 @@ export default class Session extends React.Component {
                             <Grid.Row centered columns={1}>
                             {
                                 this.state.sessionKey == null ?
-                                <Button onClick={this.handleStartSession}>Start Session</Button> :
+                                <Button disabled={!playerLoaded} onClick={this.handleStartSession}>{btnText}</Button> :
                                 <Button icon='search' onClick={this.handleToggleSearch} />
                             }
                             </Grid.Row>
@@ -93,4 +96,8 @@ export default class Session extends React.Component {
             </Sidebar.Pushable>
         )
     }
+}
+
+Session.propTypes = {
+    playerLoaded: PropTypes.bool
 }
