@@ -235,4 +235,27 @@ app.post('/api/session/addsong', (req, res) => {
     });
 })
 
+app.get('/api/session/play', (req, res) => {
+    listeningSessions.findOne({owner:req.cookies['user_id']}, (err, doc) => {
+        if (err) {
+            res.send(err);
+        }
+        if (doc != null) {
+            let firstTrack = doc.tracks[0];
+            rp.put({
+                url: 'https://api.spotify.com/v1/me/player/play',
+                headers: { 'Authorization': 'Bearer ' + req.cookies.access_token },
+                json: true,
+                body: { uris: ['spotify:track:'+firstTrack] } 
+            })
+            .then(result => {
+                res.sendStatus(200);
+            })
+            .catch(err => {
+                res.send(err);
+            }) 
+        }
+    })
+})
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

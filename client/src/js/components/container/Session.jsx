@@ -11,11 +11,15 @@ export default class Session extends React.Component {
         this.state = {
             tracks: null,
             sessionKey: null,
-            sideBarVisible: false
+            sideBarVisible: false,
+            songPlaying: false
         }
         this.handleStartSession = this.handleStartSession.bind(this);
         this.handleToggleSearch = this.handleToggleSearch.bind(this);
         this.handleGetUpdatedTracks = this.handleGetUpdatedTracks.bind(this);
+        this.handlePlaySong = this.handlePlaySong.bind(this);
+        // this.handleNextSong = this.handleNextSong.bind(this);
+        // this.handleBackSong = this.handleBackSong.bind(this);
     }
 
     handleStartSession = () => {
@@ -55,6 +59,13 @@ export default class Session extends React.Component {
         })
     }
 
+    handlePlaySong = () => {
+        axios.get('/api/session/play', { withCredentials: true })
+        .then(res => {
+            console.log(res);
+        })
+    }
+
     render() {
         let { playerLoaded } = this.props;
         let btnText = playerLoaded ? 'Start Session' : 'Loading Player...';
@@ -80,6 +91,20 @@ export default class Session extends React.Component {
                                 this.state.sessionKey != null &&
                                 <Grid.Row>
                                     <h3>{`You Session Key: ${this.state.sessionKey}`}</h3>
+                                </Grid.Row>
+                            }
+                            {
+                                this.state.sessionKey != null &&
+                                <Grid.Row columns={1}>
+                                    {/* <Grid.Column width="1" textAlign="right" floated='right'>
+                                        <Button icon='step backward' onClick={this.handleBackSong} />
+                                    </Grid.Column> */}
+                                    <Grid.Column width="1">
+                                        <Button icon='play' onClick={this.handlePlaySong} />
+                                     </Grid.Column>
+                                    {/* <Grid.Column width="1" textAlign="left" floated='left'>
+                                        <Button icon='step forward' onClick={this.handleNextSong} />
+                                    </Grid.Column> */}
                                 </Grid.Row>
                             }
                             <Grid.Row centered columns={3}>

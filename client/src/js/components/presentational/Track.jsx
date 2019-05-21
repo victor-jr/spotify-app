@@ -5,7 +5,7 @@ import { Grid, Image } from 'semantic-ui-react';
 const Track = ({ track, playing }) => {
     return (
         <Grid.Column>
-            <Image style={{opacity: track.opacity}} src={track.album.images[1].url} />
+            <Image style={{opacity: track.opacity, marginBottom: '1em'}} src={track.album.images[1].url} />
         </Grid.Column>
     )
 }
